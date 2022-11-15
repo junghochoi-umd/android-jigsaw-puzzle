@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/menu_play"
+        android:title="Play"
+        android:icon="@drawable/puzzle_icon"/>
+    <item
+        android:id="@+id/menu_friends"
+        android:title="Friends"
+        android:icon="@drawable/ic_users_svgrepo_com"/>
+
+    <item
+        android:id="@+id/menu_puzzles"
+        android:title="Puzzles"
+        android:icon="@drawable/ic_book_svgrepo_com"
+        />
+    <item
+
+        android:id="@+id/menu_you"
+        android:title="You"
+        android:icon="@drawable/ic_baseline_person_24"
+        />
+</menu>
