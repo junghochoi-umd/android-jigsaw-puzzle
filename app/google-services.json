@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "203158858659",
+    "project_id": "jigsaw-puzzle-3c812",
+    "storage_bucket": "jigsaw-puzzle-3c812.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:203158858659:android:982c2345786fb0dd654816",
+        "android_client_info": {
+          "package_name": "com.example.jigsaw_puzzle"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "203158858659-iji26m4padriqrb18frll9i62pvfmip5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDxod7wNF3KcsGTtRXqGrzCTs1-vPmJumY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "203158858659-iji26m4padriqrb18frll9i62pvfmip5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
