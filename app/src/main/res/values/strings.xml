@@ -30,9 +30,24 @@
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
 
 
-<!--    Home Page -->
+    <!--    Home Page -->
     <string name="homepage_trending_puzzles">Trending Puzzles</string>
     <string name="homepage_friend_activity">Friend Activity</string>
 
     <string name="homepage_play_puzzle">Play Puzzle</string>
+
+
+    <!-- Profile Page  -->
+    <string name="profile_page_header">Profile</string>
+
+
+    <!--  Friends Page  -->
+    <string name="friends_page_header">Friends</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!--  Puzzles Page  -->
+    <string name="puzzle_page_header">Your Puzzles</string>
+
+
 </resources>

@@ -24,7 +24,7 @@
         android:theme="@style/Theme.Jigsaw_puzzle"
         tools:targetApi="31">
         <activity
-            android:name=".HomePageActivity"
+            android:name=".AppActivity"
             android:exported="false"
             android:label="@string/title_activity_home_page"
             android:theme="@style/Theme.Jigsaw_puzzle.NoActionBar" />
@@ -32,7 +32,7 @@
 
 
         <activity
-            android:name=".MainActivity"
+            android:name=".LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
