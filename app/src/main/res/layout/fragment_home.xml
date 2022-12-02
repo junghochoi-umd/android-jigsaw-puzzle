@@ -33,6 +33,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/homepage_play_puzzle"
+        android:textColor="@color/white"
         tools:ignore="TextContrastCheck,TextContrastCheck"
         tools:layout_editor_absoluteX="152dp"
         tools:layout_editor_absoluteY="548dp" />

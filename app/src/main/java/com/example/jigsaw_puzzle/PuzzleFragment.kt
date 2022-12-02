@@ -1,15 +1,25 @@
 package com.example.jigsaw_puzzle
 
+import android.app.Activity
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.ImageView
+import android.widget.ProgressBar
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
+import java.net.URI
+import java.util.*
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
 /**
  * A simple [Fragment] subclass.
@@ -17,16 +27,21 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 class PuzzleFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+
+    private val TAG = "PuzzleFragment"
+
+    private lateinit var storage: FirebaseStorage
+    private lateinit var storageRef: StorageReference
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
+
+        storage = FirebaseStorage.getInstance()
+        storageRef = storage.reference
+
+
+
     }
 
     override fun onCreateView(
@@ -37,23 +52,41 @@ class PuzzleFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_puzzle, container, false)
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment PuzzleFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            PuzzleFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val addPuzzleBtn: Button = view.findViewById(R.id.addPuzzleBtn)
+
+        var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            result: ActivityResult ->
+             if(result.resultCode== Activity.RESULT_OK){
+                 val imageURI: Uri? = result.data?.data
+
+
+//                 var progressBar: ProgressBar = ProgressBar(context)
+//                 progressBar.showContextMenu()
+
+
+                 var ref: StorageReference = storageRef.child("images/" + UUID.randomUUID().toString())
+
+
+                 if (imageURI != null) {
+                     ref.putFile(imageURI)
+                 }
+
+
+                 Log.d(TAG, imageURI.toString())
+
+
+             }
+        }
+
+        addPuzzleBtn.setOnClickListener(View.OnClickListener { view ->
+            val picIntent: Intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
+            resultLauncher.launch(picIntent)
+        })
     }
+
+
+
 }

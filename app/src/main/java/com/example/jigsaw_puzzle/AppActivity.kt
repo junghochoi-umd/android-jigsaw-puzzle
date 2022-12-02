@@ -5,6 +5,11 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.firestore.FirebaseFirestore
+
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 
 
 class AppActivity : AppCompatActivity() {
@@ -13,9 +18,21 @@ class AppActivity : AppCompatActivity() {
 
     private lateinit var bottomNav : BottomNavigationView
 
+
+    private lateinit var db: FirebaseFirestore
+
+    private lateinit var storage: FirebaseStorage
+    private lateinit var storageRef: StorageReference
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_app)
+
+        storage = FirebaseStorage.getInstance()
+        storageRef = storage.reference
+
 
         loadFragment(HomeFragment())
 
@@ -34,6 +51,13 @@ class AppActivity : AppCompatActivity() {
                 }
                 R.id.menu_puzzles -> {
                     Log.i(TAG, "PlayMenuItem Clicked")
+
+                    var puzzleView: Fragment = PuzzleFragment()
+                    var args: Bundle = Bundle()
+
+
+
+                    puzzleView.arguments
                     loadFragment(PuzzleFragment())
                     return@setOnItemSelectedListener true
                 }
