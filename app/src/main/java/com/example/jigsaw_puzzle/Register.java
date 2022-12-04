@@ -29,7 +29,7 @@ import java.util.Map;
 
 
 public class Register extends AppCompatActivity {
-    EditText mFullName, mEmail, mPassword, mPhone;
+    EditText mFullName, mEmail, mPassword, mPhone, mRetypePassword;
     Button mRegisterBtn;
     TextView mLoginBtn;
     FirebaseAuth fAuth;
@@ -46,6 +46,7 @@ public class Register extends AppCompatActivity {
         mFullName = findViewById(R.id.name);
         mEmail = findViewById(R.id.email);
         mPassword = findViewById(R.id.password);
+        mRetypePassword = findViewById(R.id.retypepassword);
         mRegisterBtn = findViewById(R.id.register);
         mLoginBtn = findViewById(R.id.login);
 
@@ -63,6 +64,7 @@ public class Register extends AppCompatActivity {
             public void onClick(View v) {
                 String email = mEmail.getText().toString().trim();
                 String password = mPassword.getText().toString().trim();
+                String retypepass = mRetypePassword.getText().toString().trim();
                 //check certain conditions for registration
                 if (TextUtils.isEmpty(email)) {
                     mEmail.setError("Email is Required");
@@ -74,6 +76,11 @@ public class Register extends AppCompatActivity {
                 }
                 if (password.length() < 6) {
                     mPassword.setError("Password must be at least 6 characters long");
+                    return;
+                }
+
+                if (!password.equals(retypepass)) {
+                    mRetypePassword.setError("Passwords must match");
                     return;
                 }
 
