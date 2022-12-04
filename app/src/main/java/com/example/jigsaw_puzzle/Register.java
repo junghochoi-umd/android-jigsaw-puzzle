@@ -40,10 +40,10 @@ public class Register extends AppCompatActivity {
         fAuth = FirebaseAuth.getInstance();
 
         //check if current user already exists
-        if (fAuth.getCurrentUser() != null) {
-            startActivity(new Intent(getApplicationContext(), AppActivity.class));
-            return;
-        }
+//        if (fAuth.getCurrentUser() != null) {
+//            startActivity(new Intent(getApplicationContext(), AppActivity.class));
+//            return;
+//        }
         mRegisterBtn.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -70,7 +70,9 @@ public class Register extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             Toast.makeText(Register.this, "User created", Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(getApplicationContext(), AppActivity.class));
+                            Intent intent = new Intent(getApplicationContext(), AppActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK  | Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
                         } else {
                             Toast.makeText(Register.this, "Error! " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                         }
