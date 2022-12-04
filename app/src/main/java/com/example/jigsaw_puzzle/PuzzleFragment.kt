@@ -45,16 +45,7 @@ class PuzzleFragment : Fragment() {
 
     private lateinit var resultLaunchPicture: ActivityResultLauncher<Intent>
 
-
-    private lateinit var userRef: DocumentReference
-    private lateinit var userDocument: DocumentSnapshot
-
-
-    private lateinit var mUploads: ArrayList<PuzzleUpload>
-    private lateinit var mAdapter: PuzzleAdapter
-
     private lateinit var puzzleRecyclerView: RecyclerView
-    private lateinit var puzzleList: ArrayList<String>
     private lateinit var puzzleAdapter: PuzzleAdapter
 
     private val USER_ID = "GnipAmsiqAE8NzhUN48x"
@@ -108,7 +99,6 @@ class PuzzleFragment : Fragment() {
                         .addOnSuccessListener {
                             Log.d(TAG, "Puzzle added with ID: " + it.id)
                             getPosts(true)
-
                         }
                         .addOnFailureListener {
                             Log.d(TAG, "Error adding document", it)

@@ -14,9 +14,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+
+import java.sql.Array;
+import java.util.HashMap;
+import java.util.Map;
+
 
 public class Register extends AppCompatActivity {
     EditText mFullName, mEmail, mPassword, mPhone;
@@ -24,6 +34,8 @@ public class Register extends AppCompatActivity {
     TextView mLoginBtn;
     FirebaseAuth fAuth;
     ProgressBar progressBar;
+    FirebaseFirestore db;
+
 
 
     @Override
@@ -38,6 +50,7 @@ public class Register extends AppCompatActivity {
         mLoginBtn = findViewById(R.id.login);
 
         fAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
 
         //check if current user already exists
 //        if (fAuth.getCurrentUser() != null) {
@@ -69,6 +82,28 @@ public class Register extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+
+                            String UID = task.getResult().getUser().getUid();
+                            Map<String, Object> userDocument = new HashMap<>();
+                            userDocument.put("id", UID);
+
+
+
+                            db.collection("users").add(userDocument)
+                                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                    @Override
+                                    public void onSuccess(DocumentReference documentReference) {
+                                        System.out.println("Document Saved Succesfully " + documentReference.getId());
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        System.err.println(e);
+                                    }
+                                });
+
+
                             Toast.makeText(Register.this, "User created", Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(getApplicationContext(), AppActivity.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK  | Intent.FLAG_ACTIVITY_NEW_TASK);
