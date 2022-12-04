@@ -12,11 +12,12 @@ import com.bumptech.glide.Glide
 import com.google.firebase.storage.FirebaseStorage
 
 
-class PuzzleAdapter(private val puzzleList: ArrayList<String>, private val mContext: Context) : RecyclerView.Adapter<PuzzleAdapter.MyViewHolder>(){
+class  PuzzleAdapter(private val puzzleList: ArrayList<String>, private val mContext: Context) : RecyclerView.Adapter<PuzzleAdapter.MyViewHolder>(){
 
 
     private val TAG = "PuzzleAdapater"
     private val storageRef = FirebaseStorage.getInstance().reference
+//    private val mListener = onItemClickListener()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
 
@@ -61,9 +62,16 @@ class PuzzleAdapter(private val puzzleList: ArrayList<String>, private val mCont
 
         val puzzleImageView: ImageView = itemView.findViewById(R.id.puzzleImageView)
 
+    }
 
+     interface OnItemClickListener {
+        fun onItemClick(position: Int)
+        fun onDeleteClick(position: Int)
+    }
+    fun setOnItemClickListener(listner: OnItemClickListener) {
 
     }
+
 
 
 
