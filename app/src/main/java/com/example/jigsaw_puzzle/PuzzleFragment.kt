@@ -11,14 +11,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.ImageView
-import android.widget.ProgressBar
 import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.firestore.*
+import com.google.firebase.firestore.EventListener
+import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import java.net.URI
 import java.util.*
+import kotlin.collections.HashMap
+import kotlin.reflect.typeOf
 
 
 /**
@@ -32,6 +38,26 @@ class PuzzleFragment : Fragment() {
 
     private lateinit var storage: FirebaseStorage
     private lateinit var storageRef: StorageReference
+    private lateinit var db: FirebaseFirestore
+
+
+
+
+    private lateinit var resultLaunchPicture: ActivityResultLauncher<Intent>
+
+
+    private lateinit var userRef: DocumentReference
+    private lateinit var userDocument: DocumentSnapshot
+
+
+    private lateinit var mUploads: ArrayList<PuzzleUpload>
+    private lateinit var mAdapter: PuzzleAdapter
+
+    private lateinit var puzzleRecyclerView: RecyclerView
+    private lateinit var puzzleList: ArrayList<String>
+    private lateinit var puzzleAdapter: PuzzleAdapter
+
+    private val USER_ID = "GnipAmsiqAE8NzhUN48x"
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,10 +65,12 @@ class PuzzleFragment : Fragment() {
 
         storage = FirebaseStorage.getInstance()
         storageRef = storage.reference
-
+        db = FirebaseFirestore.getInstance()
 
 
     }
+
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -54,39 +82,85 @@ class PuzzleFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         val addPuzzleBtn: Button = view.findViewById(R.id.addPuzzleBtn)
 
-        var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            result: ActivityResult ->
-             if(result.resultCode== Activity.RESULT_OK){
-                 val imageURI: Uri? = result.data?.data
+        puzzleRecyclerView = view?.findViewById(R.id.puzzleRecyclerView)!!
+        puzzleAdapter = PuzzleAdapter(arrayListOf(), view.context)
+        puzzleRecyclerView.adapter = puzzleAdapter
+
+        resultLaunchPicture =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+                if (result.resultCode == Activity.RESULT_OK) {
+                    val imageURI: Uri? = result.data?.data
+
+                    var filePath: String = "images/" + UUID.randomUUID().toString()
+                    var ref: StorageReference = storageRef.child(filePath)
+
+                    if (imageURI != null) {
+                        ref.putFile(imageURI)
+                    }
 
 
-//                 var progressBar: ProgressBar = ProgressBar(context)
-//                 progressBar.showContextMenu()
+                    var puzzleDocument: Map<String, String> = createPuzzleMap(filePath, USER_ID)
+
+                    db.collection("puzzles")
+                        .add(puzzleDocument)
+                        .addOnSuccessListener {
+                            Log.d(TAG, "Puzzle added with ID: " + it.id)
+                            getPosts(true)
+
+                        }
+                        .addOnFailureListener {
+                            Log.d(TAG, "Error adding document", it)
+                        }
 
 
-                 var ref: StorageReference = storageRef.child("images/" + UUID.randomUUID().toString())
+                }
+            }
 
-
-                 if (imageURI != null) {
-                     ref.putFile(imageURI)
-                 }
-
-
-                 Log.d(TAG, imageURI.toString())
-
-
-             }
+        addPuzzleBtn.setOnClickListener {
+            val picIntent: Intent =
+                Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
+            resultLaunchPicture.launch(picIntent)
         }
 
-        addPuzzleBtn.setOnClickListener(View.OnClickListener { view ->
-            val picIntent: Intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
-            resultLauncher.launch(picIntent)
-        })
+
+        getPosts(false)
+
     }
 
+
+    private fun createPuzzleMap(imageFilePath: String, userId: String): HashMap<String, String> {
+        return hashMapOf(
+            "image_file_path" to imageFilePath,
+            "user_id" to userId
+        )
+    }
+
+
+
+
+    private fun getPosts(refresh: Boolean) {
+        db.collection("puzzles").whereEqualTo("user_id", USER_ID).get()
+            .addOnSuccessListener { documents ->
+                val puzzles = ArrayList<String>()
+                for (doc in documents) {
+                    var imageFilePath: String = doc.get("image_file_path") as String
+                    puzzles.add(imageFilePath)
+                }
+                initRecyclerView(puzzles,refresh)
+            }
+    }
+
+    private fun initRecyclerView(puzzleList: ArrayList<String>, refresh: Boolean) {
+        if (refresh) {
+            puzzleAdapter.notifyDataSetChanged()
+            return
+        }
+        puzzleRecyclerView.layoutManager = GridLayoutManager(activity, 2, RecyclerView.VERTICAL, false)
+        puzzleRecyclerView.setHasFixedSize(true)
+        puzzleRecyclerView.adapter = PuzzleAdapter(puzzleList, view?.context!!)
+    }
 
 
 }

@@ -53,10 +53,6 @@ class AppActivity : AppCompatActivity() {
                     Log.i(TAG, "PlayMenuItem Clicked")
 
                     var puzzleView: Fragment = PuzzleFragment()
-                    var args: Bundle = Bundle()
-
-
-
                     puzzleView.arguments
                     loadFragment(PuzzleFragment())
                     return@setOnItemSelectedListener true
