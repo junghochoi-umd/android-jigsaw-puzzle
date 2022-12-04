@@ -40,6 +40,7 @@
         android:id="@+id/puzzleRecyclerView"
         android:layout_width="349dp"
         android:layout_height="480dp"
+        android:scrollbars="vertical"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:layout_constraintBottom_toTopOf="@+id/addPuzzleBtn"
         app:layout_constraintEnd_toEndOf="parent"

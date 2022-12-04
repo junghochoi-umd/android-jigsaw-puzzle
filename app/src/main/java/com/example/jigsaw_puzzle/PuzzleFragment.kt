@@ -15,6 +15,7 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.*
 import com.google.firebase.firestore.EventListener
@@ -105,7 +106,6 @@ class PuzzleFragment : Fragment() {
                                 .addOnSuccessListener {
                                     Log.d(TAG, "Puzzle added with ID: " + it.id)
                                     getPosts(view)
-
                                     puzzleAdapter.notifyDataSetChanged()
                                 }
                                 .addOnFailureListener {
@@ -148,7 +148,7 @@ class PuzzleFragment : Fragment() {
 
     private fun initRecyclerView(puzzleList: ArrayList<String>, view: View) {
 
-        puzzleRecyclerView.layoutManager = GridLayoutManager(activity, 2, RecyclerView.VERTICAL, false)
+        puzzleRecyclerView.layoutManager = LinearLayoutManager(view.context)
         puzzleRecyclerView.setHasFixedSize(true)
         puzzleRecyclerView.adapter = PuzzleAdapter(puzzleList, view.context)
     }
