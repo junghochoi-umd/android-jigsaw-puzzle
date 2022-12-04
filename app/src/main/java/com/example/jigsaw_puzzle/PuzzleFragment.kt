@@ -97,24 +97,22 @@ class PuzzleFragment : Fragment() {
                     var ref: StorageReference = storageRef.child(filePath)
 
                     if (imageURI != null) {
-                        ref.putFile(imageURI)
+                        ref.putFile(imageURI).addOnSuccessListener {
+                            var puzzleDocument: Map<String, String> = createPuzzleMap(filePath, USER_ID)
+
+                            db.collection("puzzles")
+                                .add(puzzleDocument)
+                                .addOnSuccessListener {
+                                    Log.d(TAG, "Puzzle added with ID: " + it.id)
+                                    getPosts(view)
+
+                                    puzzleAdapter.notifyDataSetChanged()
+                                }
+                                .addOnFailureListener {
+                                    Log.d(TAG, "Error adding document", it)
+                                }
+                        }
                     }
-
-
-                    var puzzleDocument: Map<String, String> = createPuzzleMap(filePath, USER_ID)
-
-                    db.collection("puzzles")
-                        .add(puzzleDocument)
-                        .addOnSuccessListener {
-                            Log.d(TAG, "Puzzle added with ID: " + it.id)
-                            getPosts(true)
-
-                        }
-                        .addOnFailureListener {
-                            Log.d(TAG, "Error adding document", it)
-                        }
-
-
                 }
             }
 
@@ -124,8 +122,7 @@ class PuzzleFragment : Fragment() {
             resultLaunchPicture.launch(picIntent)
         }
 
-
-        getPosts(false)
+        getPosts(view)
 
     }
 
@@ -137,10 +134,7 @@ class PuzzleFragment : Fragment() {
         )
     }
 
-
-
-
-    private fun getPosts(refresh: Boolean) {
+    private fun getPosts(view: View) {
         db.collection("puzzles").whereEqualTo("user_id", USER_ID).get()
             .addOnSuccessListener { documents ->
                 val puzzles = ArrayList<String>()
@@ -148,18 +142,15 @@ class PuzzleFragment : Fragment() {
                     var imageFilePath: String = doc.get("image_file_path") as String
                     puzzles.add(imageFilePath)
                 }
-                initRecyclerView(puzzles,refresh)
+                initRecyclerView(puzzles, view)
             }
     }
 
-    private fun initRecyclerView(puzzleList: ArrayList<String>, refresh: Boolean) {
-        if (refresh) {
-            puzzleAdapter.notifyDataSetChanged()
-            return
-        }
+    private fun initRecyclerView(puzzleList: ArrayList<String>, view: View) {
+
         puzzleRecyclerView.layoutManager = GridLayoutManager(activity, 2, RecyclerView.VERTICAL, false)
         puzzleRecyclerView.setHasFixedSize(true)
-        puzzleRecyclerView.adapter = PuzzleAdapter(puzzleList, view?.context!!)
+        puzzleRecyclerView.adapter = PuzzleAdapter(puzzleList, view.context)
     }
 
 
