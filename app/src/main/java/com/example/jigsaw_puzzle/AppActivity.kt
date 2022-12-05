@@ -38,41 +38,41 @@ class AppActivity : AppCompatActivity() {
         storageRef = storage.reference
 
 
-        loadFragment(HomeFragment())
+        loadFragment(PuzzleFragment())
 
-        bottomNav = findViewById(R.id.bottomNav)
-        bottomNav.setOnItemSelectedListener {
-            when (it.itemId) {
-                R.id.menu_play -> {
-                    Log.i(TAG, "PlayMenuItem Clicked")
-                    loadFragment(HomeFragment())
-                    return@setOnItemSelectedListener true
-                }
-                R.id.menu_friends -> {
-                    Log.i(TAG, "PlayMenuItem Clicked")
-                    loadFragment(FriendsFragment())
-                    return@setOnItemSelectedListener true
-                }
-                R.id.menu_puzzles -> {
-                    Log.i(TAG, "PlayMenuItem Clicked")
-
-                    var puzzleView: Fragment = PuzzleFragment()
-                    puzzleView.arguments
-                    loadFragment(PuzzleFragment())
-                    return@setOnItemSelectedListener true
-                }
-
-                R.id.menu_you -> {
-                    Log.i(TAG, "PlayMenuItem Clicked")
-                    loadFragment(ProfileFragment())
-                    return@setOnItemSelectedListener true
-                }
-                else -> {
-                    Log.i(TAG, "else")
-                    return@setOnItemSelectedListener false
-                }
-            }
-        }
+//        bottomNav = findViewById(R.id.bottomNav)
+//        bottomNav.setOnItemSelectedListener {
+//            when (it.itemId) {
+//                R.id.menu_play -> {
+//                    Log.i(TAG, "PlayMenuItem Clicked")
+//                    loadFragment(HomeFragment())
+//                    return@setOnItemSelectedListener true
+//                }
+//                R.id.menu_friends -> {
+//                    Log.i(TAG, "PlayMenuItem Clicked")
+//                    loadFragment(FriendsFragment())
+//                    return@setOnItemSelectedListener true
+//                }
+//                R.id.menu_puzzles -> {
+//                    Log.i(TAG, "PlayMenuItem Clicked")
+//
+//                    var puzzleView: Fragment = PuzzleFragment()
+//                    puzzleView.arguments
+//                    loadFragment(PuzzleFragment())
+//                    return@setOnItemSelectedListener true
+//                }
+//
+//                R.id.menu_you -> {
+//                    Log.i(TAG, "PlayMenuItem Clicked")
+//                    loadFragment(ProfileFragment())
+//                    return@setOnItemSelectedListener true
+//                }
+//                else -> {
+//                    Log.i(TAG, "else")
+//                    return@setOnItemSelectedListener false
+//                }
+//            }
+//        }
     }
 
     private  fun loadFragment(fragment: Fragment){

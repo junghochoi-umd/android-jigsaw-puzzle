@@ -21,15 +21,13 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.storage.FirebaseStorage;
 
-import java.sql.Array;
 import java.util.HashMap;
 import java.util.Map;
 
 
 public class Register extends AppCompatActivity {
-    EditText mFullName, mEmail, mPassword, mPhone, mRetypePassword;
+    EditText mUsername, mEmail, mPassword, mPhone, mRetypePassword;
     Button mRegisterBtn;
     TextView mLoginBtn;
     FirebaseAuth fAuth;
@@ -43,7 +41,7 @@ public class Register extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        mFullName = findViewById(R.id.name);
+        mUsername = findViewById(R.id.username);
         mEmail = findViewById(R.id.email);
         mPassword = findViewById(R.id.password);
         mRetypePassword = findViewById(R.id.retypepassword);
@@ -65,6 +63,7 @@ public class Register extends AppCompatActivity {
                 String email = mEmail.getText().toString().trim();
                 String password = mPassword.getText().toString().trim();
                 String retypepass = mRetypePassword.getText().toString().trim();
+                String username = mUsername.getText().toString().trim();
                 //check certain conditions for registration
                 if (TextUtils.isEmpty(email)) {
                     mEmail.setError("Email is Required");
@@ -93,22 +92,11 @@ public class Register extends AppCompatActivity {
                             String UID = task.getResult().getUser().getUid();
                             Map<String, Object> userDocument = new HashMap<>();
                             userDocument.put("id", UID);
+                            userDocument.put("username", username);
 
 
+                            db.collection("users").document(UID).set(userDocument);
 
-                            db.collection("users").add(userDocument)
-                                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                    @Override
-                                    public void onSuccess(DocumentReference documentReference) {
-                                        System.out.println("Document Saved Succesfully " + documentReference.getId());
-                                    }
-                                })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        System.err.println(e);
-                                    }
-                                });
 
 
                             Toast.makeText(Register.this, "User created", Toast.LENGTH_SHORT).show();

@@ -11,6 +11,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.TextView
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -56,6 +57,7 @@ class PuzzleFragment : Fragment() {
     private lateinit var auth: FirebaseAuth
 
     private lateinit var currUser: FirebaseUser
+    private lateinit var username: String
 
 //    private val USER_ID = "GnipAmsiqAE8NzhUN48x"
 
@@ -69,6 +71,8 @@ class PuzzleFragment : Fragment() {
 
         auth = FirebaseAuth.getInstance()
         currUser = auth.currentUser!!
+
+
 
 
 
@@ -89,6 +93,14 @@ class PuzzleFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val addPuzzleBtn: Button = view.findViewById(R.id.addPuzzleBtn)
+
+        Log.d(TAG, currUser.uid)
+        db.collection("users").document(currUser.uid).get()
+            .addOnSuccessListener{
+                val username = it.get("username")
+                view.findViewById<TextView>(R.id.welcomeHeader).text = "Welcome $username"
+
+            }
 
 
 
