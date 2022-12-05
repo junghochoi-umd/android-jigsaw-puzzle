@@ -25,7 +25,12 @@ import com.google.firebase.storage.StorageReference
 import java.net.URI
 import java.util.*
 import kotlin.collections.HashMap
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+
+
 import kotlin.reflect.typeOf
+
 
 
 /**
@@ -48,8 +53,11 @@ class PuzzleFragment : Fragment() {
 
     private lateinit var puzzleRecyclerView: RecyclerView
     private lateinit var puzzleAdapter: PuzzleAdapter
+    private lateinit var auth: FirebaseAuth
 
-    private val USER_ID = "GnipAmsiqAE8NzhUN48x"
+    private lateinit var currUser: FirebaseUser
+
+//    private val USER_ID = "GnipAmsiqAE8NzhUN48x"
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,6 +66,12 @@ class PuzzleFragment : Fragment() {
         storage = FirebaseStorage.getInstance()
         storageRef = storage.reference
         db = FirebaseFirestore.getInstance()
+
+        auth = FirebaseAuth.getInstance()
+        currUser = auth.currentUser!!
+
+
+
 
 
     }
@@ -76,6 +90,8 @@ class PuzzleFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val addPuzzleBtn: Button = view.findViewById(R.id.addPuzzleBtn)
 
+
+
         puzzleRecyclerView = view?.findViewById(R.id.puzzleRecyclerView)!!
         puzzleAdapter = PuzzleAdapter(arrayListOf(), view.context)
         puzzleRecyclerView.adapter = puzzleAdapter
@@ -90,7 +106,7 @@ class PuzzleFragment : Fragment() {
 
                     if (imageURI != null) {
                         ref.putFile(imageURI).addOnSuccessListener {
-                            var puzzleDocument: Map<String, String> = createPuzzleMap(filePath, USER_ID)
+                            var puzzleDocument: Map<String, String> = createPuzzleMap(filePath, currUser.uid)
 
                             db.collection("puzzles")
                                 .add(puzzleDocument)
@@ -126,7 +142,7 @@ class PuzzleFragment : Fragment() {
     }
 
     private fun getPosts(view: View) {
-        db.collection("puzzles").whereEqualTo("user_id", USER_ID).get()
+        db.collection("puzzles").whereEqualTo("user_id", currUser.uid).get()
             .addOnSuccessListener { documents ->
                 val puzzles = ArrayList<String>()
                 for (doc in documents) {
