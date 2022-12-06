@@ -49,6 +49,7 @@ public class PuzzleActivity extends AppCompatActivity {
         final RelativeLayout layout = findViewById(R.id.layout);
         final ImageView imageView = findViewById(R.id.imageView);
 
+        imageView.setImageURI(mCurrentPhotoUri);
         Intent intent = getIntent();
 
 
@@ -64,23 +65,32 @@ public class PuzzleActivity extends AppCompatActivity {
             @Override
             public void run() {
 
-                Log.d(TAG, mCurrentPhotoUri.toString());
 
 
-
-                imageView.setImageURI(mCurrentPhotoUri);
 //                    imageView.setImageDrawable(mCurrentPhotoUri);
+
+
+
+                InputStream inputStream = null;
+                try {
+                    Log.d(TAG, mCurrentPhotoUri.toString());
+                    inputStream = getContentResolver().openInputStream(mCurrentPhotoUri);
+                } catch (FileNotFoundException e) {
+                    Log.d(TAG, "File not found excpetion");
+                    e.printStackTrace();
+                }
+                Drawable yourDrawable = Drawable.createFromStream(inputStream, mCurrentPhotoUri.toString() );
 
 //                Drawable yourDrawable;
 //
 //                InputStream inputStream = null;
 //                try {
-//                    inputStream = getContentResolver().openInputStream(mCurrentPhotoUri);
+//
 //                } catch (Exception e) {
 //                    Log.d(TAG, "");
 //                    e.printStackTrace();
 //                }
-//                yourDrawable = Drawable.createFromStream(inputStream, mCurrentPhotoUri.toString() );
+//
 //
 //                imageView.setImageDrawable(yourDrawable);
 

@@ -49,6 +49,10 @@ class  PuzzleAdapter(private val puzzleList: ArrayList<String>, private val mCon
                 )
 
                 intent.putExtra("imageUri", it);
+
+                //check
+
+
                 startActivity(mContext, intent, null)
             }
 
