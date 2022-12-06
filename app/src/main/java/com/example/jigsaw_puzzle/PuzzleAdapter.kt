@@ -1,15 +1,20 @@
 package com.example.jigsaw_puzzle
 
 import android.content.Context
+import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
+
 import com.bumptech.glide.Glide
 import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
+
 
 
 class  PuzzleAdapter(private val puzzleList: ArrayList<String>, private val mContext: Context) : RecyclerView.Adapter<PuzzleAdapter.MyViewHolder>(){
@@ -34,6 +39,23 @@ class  PuzzleAdapter(private val puzzleList: ArrayList<String>, private val mCon
         Log.d(TAG, currPuzzle)
 
         holder.puzzleImageView.setOnClickListener { view ->
+
+
+            var imageURI: StorageReference = storageRef.child(currPuzzle)
+            imageURI.downloadUrl.addOnSuccessListener {
+                val intent = Intent(
+                    mContext,
+                    PuzzleActivity::class.java
+                )
+
+                intent.putExtra("imageUri", it);
+                startActivity(mContext, intent, null)
+            }
+
+
+
+
+
             Toast.makeText(
                 mContext,
                 "this is number: $position Image Selected",

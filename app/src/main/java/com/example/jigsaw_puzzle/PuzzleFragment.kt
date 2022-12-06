@@ -126,6 +126,9 @@ class PuzzleFragment : Fragment() {
                                     Log.d(TAG, "Puzzle added with ID: " + it.id)
                                     getPosts(view)
                                     puzzleAdapter.notifyDataSetChanged()
+
+
+
                                 }
                                 .addOnFailureListener {
                                     Log.d(TAG, "Error adding document", it)

@@ -49,5 +49,6 @@
     <!--  Puzzles Page  -->
     <string name="puzzle_page_header">Your Puzzles</string>
     <string name="puzzle_page_add_puzzle">Add Puzzle</string>
+    <string name="title_activity_puzzle">PuzzleActivity</string>
 
 </resources>
