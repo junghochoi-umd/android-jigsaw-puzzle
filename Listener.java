@@ -10,47 +10,47 @@ import static java.lang.Math.sqrt;
 import static java.lang.StrictMath.abs;
 
 public class TouchListener implements View.OnTouchListener {
-    private float xDelta;
-    private float yDelta;
-    private PuzzleActivity activity;
+    private float xCoordinateApplied;
+    private float yCoordinateApplied;
+    private PuzzleActivity action;
 
-    public TouchListener(PuzzleActivity activity) {
-        this.activity = activity;
+    public TouchListener(PuzzleActivity action) {
+        this.action = action;
     }
 
     @Override
-    public boolean onTouch(View view, MotionEvent motionEvent) {
-        float x = motionEvent.getRawX();
-        float y = motionEvent.getRawY();
-        final double tolerance = sqrt(pow(view.getWidth(), 2) + pow(view.getHeight(), 2)) / 10;
+    public boolean onTouch(View viewSeen, MotionEvent motion) {
+        float x = motion.getRawX();
+        float y = motion.getRawY();
+        final double capacity = sqrt(pow(viewSeen.getWidth(), 2) + pow(viewSeen.getHeight(), 2)) / 10;
 
-        PuzzlePiece piece = (PuzzlePiece) view;
-        if (!piece.canMove) {
+        PuzzlePiece block = (PuzzlePiece) viewSeen;
+        if (!block.canMove) {
             return true;
         }
 
-        RelativeLayout.LayoutParams lParams = (RelativeLayout.LayoutParams) view.getLayoutParams();
-        switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
-            case MotionEvent.ACTION_DOWN:
-                xDelta = x - lParams.leftMargin;
-                yDelta = y - lParams.topMargin;
-                piece.bringToFront();
+        RelativeLayout.LayoutParams leftFrame = (RelativeLayout.LayoutParams) viewSeen.getLayoutParams();
+        switch (motion.getAction() & Motion.ACTION_MASK) {
+            case Motion.ACTION_MOVE:
+                leftFrame.leftSideDiff = (int) (x - xCoordinateApplied);
+                leftFrame.topSideDiff = (int) (y - yCoordinateApplied);
+                viewSeen.setLayoutParams(leftFrame);
                 break;
-            case MotionEvent.ACTION_MOVE:
-                lParams.leftMargin = (int) (x - xDelta);
-                lParams.topMargin = (int) (y - yDelta);
-                view.setLayoutParams(lParams);
+            case Motion.ACTION_DOWN:
+                xCoordinateApplied = x - leftFrame.leftSideDiff;
+             yCoordinateApplied = y - leftFrame.topSideDiff;
+                block.bringToFront();
                 break;
-            case MotionEvent.ACTION_UP:
-                int xDiff = abs(piece.xCoord - lParams.leftMargin);
-                int yDiff = abs(piece.yCoord - lParams.topMargin);
-                if (xDiff <= tolerance && yDiff <= tolerance) {
-                    lParams.leftMargin = piece.xCoord;
-                    lParams.topMargin = piece.yCoord;
-                    piece.setLayoutParams(lParams);
-                    piece.canMove = false;
-                    sendViewToBack(piece);
-                    activity.checkGameOver();
+            case Motion.ACTION_UP:
+                int verticalDiff = abs(block.xCoord - leftFrame.leftSideDiff);
+                int horizontalDiff = abs(block.yCoord - leftFrame.topSideDiff);
+                if (verticalDiff <= capacity && horizontalDiff <= capacity) {
+                    leftFrame.leftSideDiff = block.xCoord;
+                    leftFrame.topSideDiff = block.yCoord;
+                    block.setLayoutParams(leftFrame);
+                    block.canMove = false;
+                    sendViewToBack(block);
+                    action.checkGameOver();
                 }
                 break;
         }
@@ -58,11 +58,11 @@ public class TouchListener implements View.OnTouchListener {
         return true;
     }
 
-    public void sendViewToBack(final View child) {
-        final ViewGroup parent = (ViewGroup)child.getParent();
+    public void sendViewToBack(final View pid) {
+        final ViewGroup parentPid = (ViewGroup)pid.getParent();
         if (null != parent) {
-            parent.removeView(child);
-            parent.addView(child, 0);
+            parentPid.removeView(pid);
+            parentPid.addView(pid, 0);
         }
     }
 }
