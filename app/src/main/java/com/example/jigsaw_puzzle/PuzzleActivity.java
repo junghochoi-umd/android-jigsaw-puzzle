@@ -49,7 +49,6 @@ public class PuzzleActivity extends AppCompatActivity {
         final RelativeLayout layout = findViewById(R.id.layout);
         final ImageView imageView = findViewById(R.id.imageView);
 
-        imageView.setImageURI(mCurrentPhotoUri);
         Intent intent = getIntent();
 
 
@@ -65,34 +64,28 @@ public class PuzzleActivity extends AppCompatActivity {
             @Override
             public void run() {
 
+                Log.d(TAG, mCurrentPhotoUri.toString());
 
 
+
+                imageView.setImageURI(mCurrentPhotoUri);
 //                    imageView.setImageDrawable(mCurrentPhotoUri);
 
 
 
                 InputStream inputStream = null;
+                Drawable yourDrawable;
                 try {
-                    Log.d(TAG, mCurrentPhotoUri.toString());
                     inputStream = getContentResolver().openInputStream(mCurrentPhotoUri);
-                } catch (FileNotFoundException e) {
-                    Log.d(TAG, "File not found excpetion");
-                    e.printStackTrace();
-                }
-                Drawable yourDrawable = Drawable.createFromStream(inputStream, mCurrentPhotoUri.toString() );
+                    yourDrawable = Drawable.createFromStream(inputStream, mCurrentPhotoUri.toString() );
+                } catch (Exception e) {
 
-//                Drawable yourDrawable;
-//
-//                InputStream inputStream = null;
-//                try {
-//
-//                } catch (Exception e) {
-//                    Log.d(TAG, "");
-//                    e.printStackTrace();
-//                }
-//
-//
-//                imageView.setImageDrawable(yourDrawable);
+                    e.printStackTrace();
+                    yourDrawable = yourDrawable = getResources().getDrawable(R.drawable.default_image);
+                }
+
+
+                imageView.setImageDrawable(yourDrawable);
 
 
                 if (imageView.getDrawable() == null) {
